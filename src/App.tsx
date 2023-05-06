@@ -1,8 +1,10 @@
 import {
     Button,
     Card,
+    Divider,
     FormControl,
     FormHelperText,
+    Grid,
     Input,
     InputLabel,
     MenuItem,
@@ -15,10 +17,19 @@ import {
 import { Box } from '@mui/system'
 import { ChangeEvent, useRef, useState } from 'react'
 
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { ruRU } from '@mui/x-date-pickers/locales'
+import 'dayjs/locale/ru'
+
 function App() {
     const [tower, setTower] = useState('')
     const [level, setLevel] = useState('')
     const [room, setRoom] = useState('')
+    const [startTime, setStartTime] = useState(null)
+    const [endTime, setEndTime] = useState(null)
     const [comment, setComment] = useState('')
     // const commentRef = useRef<HTMLTextAreaElement>(null)
 
@@ -44,6 +55,8 @@ function App() {
             tower,
             level,
             room,
+            startTime,
+            endTime,
             comment,
             // comment: commentRef.current!.value,
         })
@@ -56,6 +69,9 @@ function App() {
         setTower('')
         setLevel('')
         setRoom('')
+
+        setStartTime(null)
+        setEndTime(null)
 
         setComment('')
         // commentRef.current!.value = '' // TODO переделать под стэйт
@@ -95,21 +111,20 @@ function App() {
             <Card
                 component='form'
                 sx={{
-                    maxWidth: 500,
+                    maxWidth: 550,
                     py: 5,
                     px: 6,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
                     margin: '0 auto',
-                    boxShadow: 2
+                    boxShadow: 2,
                 }}
-                onSubmit={(e)=>{
-                    e.preventDefault();
+                onSubmit={(e) => {
+                    e.preventDefault()
                 }}
             >
-                <Typography variant="h5">Выбор переговорной комнаты</Typography>
-
+                <Typography variant='h5'>Выбор переговорной комнаты</Typography>
                 <FormControl fullWidth>
                     <InputLabel id='tower-select-label'>Выберите башню</InputLabel>
                     <Select
@@ -124,7 +139,6 @@ function App() {
                         <MenuItem value={'B'}>Башня Б</MenuItem>
                     </Select>
                 </FormControl>
-
                 <FormControl fullWidth>
                     <InputLabel id='level-select-label'>Выберите нужный этаж'</InputLabel>
                     <Select
@@ -139,7 +153,6 @@ function App() {
                         {levelItems}
                     </Select>
                 </FormControl>
-
                 <FormControl fullWidth>
                     <InputLabel id='room-select-label'>Выберите комнату'</InputLabel>
                     <Select
@@ -154,8 +167,36 @@ function App() {
                     </Select>
                 </FormControl>
 
-                {/* выбор даты и интервала времени (в произвольном виде, например выпадающие списки, data-picker) */}
-DATE
+                <Divider />
+
+                    {/* выбор даты и интервала времени (в произвольном виде, например выпадающие списки, data-picker) */}
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
+                            <DateTimePicker
+                                label='Время начала'
+                                ampm={false}
+                                disablePast={true}
+                                value={startTime}
+                                onChange={(newValue) => setStartTime(newValue)}
+                                slotProps={{
+                                    textField: {
+                                        required: true,
+                                    },
+                                }}
+                            />
+                            <DateTimePicker
+                                label='Время окончания'
+                                ampm={false}
+                                disablePast={true}
+                                value={endTime}
+                                onChange={(newValue) => setEndTime(newValue)}
+                                slotProps={{
+                                    textField: {
+                                        required: true,
+                                    },
+                                }}
+                            />
+                    </LocalizationProvider>
+
                 <TextField
                     label='Дополнительная информация'
                     variant='outlined'
@@ -171,11 +212,9 @@ DATE
                     // inputRef={commentRef}
                     // InputLabelProps={{ shrink: commentRef.current.value }}
                 />
-
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
                     Отправить
                 </Button>
-
                 <Button variant='outlined' type='reset' onClick={handleReset}>
                     Очистить
                 </Button>
