@@ -112,7 +112,7 @@ function App() {
                     e.preventDefault()
                 }}
             >
-                <Typography variant='h5'>Выбор переговорной комнаты</Typography>
+                <Typography variant='h5' gutterBottom>Выбор переговорной комнаты</Typography>
 
                 <FormControl fullWidth>
                     <InputLabel id='tower-select-label'>Выберите башню *</InputLabel>
@@ -163,7 +163,7 @@ function App() {
                 <Typography variant='subtitle1'>Забронировать дату и время</Typography>
 
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                         <Grid item xs={12} sm={6}>
                             <DateTimePicker
                                 label='Время начала'
