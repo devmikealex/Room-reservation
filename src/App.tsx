@@ -1,27 +1,19 @@
 import {
     Button,
     Card,
-    Divider,
     FormControl,
-    FormHelperText,
     Grid,
-    Input,
     InputLabel,
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextareaAutosize,
     TextField,
     Typography,
 } from '@mui/material'
-import { Box } from '@mui/system'
-import { ChangeEvent, useRef, useState } from 'react'
-
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { ChangeEvent, useState } from 'react'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-import { ruRU } from '@mui/x-date-pickers/locales'
 import 'dayjs/locale/ru'
 
 function App() {
@@ -31,7 +23,6 @@ function App() {
     const [startTime, setStartTime] = useState(null)
     const [endTime, setEndTime] = useState(null)
     const [comment, setComment] = useState('')
-    // const commentRef = useRef<HTMLTextAreaElement>(null)
 
     const handleTowerChange = (event: SelectChangeEvent) => {
         setTower(event.target.value)
@@ -58,23 +49,18 @@ function App() {
             startTime,
             endTime,
             comment,
-            // comment: commentRef.current!.value,
         })
-        console.log('🚀 json:', json)
+        console.log('🚀JSON:', json)
     }
 
     function handleReset() {
         console.log('handle-Reset')
-        // TODO validate
         setTower('')
         setLevel('')
         setRoom('')
-
         setStartTime(null)
         setEndTime(null)
-
         setComment('')
-        // commentRef.current!.value = '' // TODO переделать под стэйт
     }
 
     const levelItems = []
@@ -125,6 +111,7 @@ function App() {
                 }}
             >
                 <Typography variant='h5'>Выбор переговорной комнаты</Typography>
+
                 <FormControl fullWidth>
                     <InputLabel id='tower-select-label'>Выберите башню *</InputLabel>
                     <Select
@@ -139,8 +126,11 @@ function App() {
                         <MenuItem value={'B'}>Башня Б</MenuItem>
                     </Select>
                 </FormControl>
+
                 <FormControl fullWidth>
-                    <InputLabel id='level-select-label'>Выберите нужный этаж *</InputLabel>
+                    <InputLabel id='level-select-label'>
+                        Выберите нужный этаж *
+                    </InputLabel>
                     <Select
                         labelId='level-select-label'
                         id='level-select'
@@ -153,6 +143,7 @@ function App() {
                         {levelItems}
                     </Select>
                 </FormControl>
+
                 <FormControl fullWidth>
                     <InputLabel id='room-select-label'>Выберите комнату *</InputLabel>
                     <Select
@@ -179,17 +170,14 @@ function App() {
                                 value={startTime}
                                 onChange={(newValue) => setStartTime(newValue)}
                                 sx={{ width: '100%' }}
-                                // openTo='year'
                                 slotProps={{
                                     textField: {
                                         required: true,
                                     },
-                                    // tabs: {
-                                    //     hidden: false,
-                                    // },
                                 }}
                             />
                         </Grid>
+                        
                         <Grid item xs={12} sm={6}>
                             <DateTimePicker
                                 label='Время окончания'
@@ -207,7 +195,6 @@ function App() {
                         </Grid>
                     </Grid>
                 </LocalizationProvider>
-                {/* <Divider /> */}
 
                 <TextField
                     label='Дополнительная информация'
@@ -217,12 +204,7 @@ function App() {
                     maxRows={4}
                     fullWidth
                     value={comment}
-                    // onChange={(e) => {
-                    //     return e.target.value
-                    // }}
                     onChange={handleCommentChange}
-                    // inputRef={commentRef}
-                    // InputLabelProps={{ shrink: commentRef.current.value }}
                 />
 
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
@@ -231,17 +213,6 @@ function App() {
                 <Button variant='outlined' type='reset' onClick={handleReset}>
                     Очистить
                 </Button>
-
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <DateTimePicker sx={{ width: '100%' }} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <DateTimePicker sx={{ width: '100%' }} />
-                        </Grid>
-                    </Grid>
-                </LocalizationProvider> */}
             </Card>
         </div>
     )
