@@ -15,13 +15,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import 'dayjs/locale/ru'
+import { Dayjs } from 'dayjs'
 
 function App() {
     const [tower, setTower] = useState('')
     const [level, setLevel] = useState('')
     const [room, setRoom] = useState('')
-    const [startTime, setStartTime] = useState(null)
-    const [endTime, setEndTime] = useState(null)
+    const [startTime, setStartTime] = useState<Dayjs | null>(null)
+    const [endTime, setEndTime] = useState<Dayjs | null>(null)
     const [comment, setComment] = useState('')
 
     const handleTowerChange = (event: SelectChangeEvent) => {
@@ -42,15 +43,16 @@ function App() {
 
     function handleSubmit(e: React.MouseEvent) {
         // e.preventDefault()
-        const json = JSON.stringify({
+        const obj = {
             tower,
             level,
             room,
             startTime,
             endTime,
             comment,
-        })
-        console.log('🚀JSON:', json)
+        }
+        console.log('🚀JSON:', JSON.stringify(obj))
+        document.querySelector('pre')!.textContent = JSON.stringify(obj, null, 2)
     }
 
     function handleReset() {
@@ -87,7 +89,7 @@ function App() {
                 variant='h4'
                 component='h1'
                 align='center'
-                mb={2}
+                gutterBottom
                 maxWidth={600}
                 mx='auto'
             >
@@ -98,11 +100,11 @@ function App() {
                 component='form'
                 sx={{
                     maxWidth: 550,
-                    py: { xs: 2, sm: 5 },
-                    px: { xs: 2, sm: 6 },
+                    py: { xs: 2, sm: 4 },
+                    px: { xs: 2, sm: 5 },
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 2,
+                    gap: 1.4,
                     margin: '0 auto',
                     boxShadow: 2,
                 }}
@@ -177,7 +179,7 @@ function App() {
                                 }}
                             />
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={6}>
                             <DateTimePicker
                                 label='Время окончания'
@@ -206,6 +208,8 @@ function App() {
                     value={comment}
                     onChange={handleCommentChange}
                 />
+
+                <Typography variant='body2' align='right' color='text.secondary'>* отмеченные поля обязательны для заполнения</Typography>
 
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
                     Отправить
