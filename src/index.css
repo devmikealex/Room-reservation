@@ -8,5 +8,8 @@
 body {
     font-family: Roboto, Arial, Helvetica, sans-serif;
     padding: 2rem;
-    background-color:rgb(235, 249, 255);
+    /* background-color:rgb(235, 249, 255); */
+    background: rgb(167,201,233);
+    background: linear-gradient(0deg, rgba(167,201,233,1) 0%, rgba(235,249,255,1) 100%); 
+    min-height: 100vh;
 }

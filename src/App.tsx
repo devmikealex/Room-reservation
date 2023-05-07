@@ -112,8 +112,8 @@ function App() {
                 component='form'
                 sx={{
                     maxWidth: 550,
-                    py: 5,
-                    px: 6,
+                    py: { xs: 2, sm: 5 },
+                    px: { xs: 2, sm: 6 },
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
@@ -126,7 +126,7 @@ function App() {
             >
                 <Typography variant='h5'>Выбор переговорной комнаты</Typography>
                 <FormControl fullWidth>
-                    <InputLabel id='tower-select-label'>Выберите башню</InputLabel>
+                    <InputLabel id='tower-select-label'>Выберите башню *</InputLabel>
                     <Select
                         labelId='tower-select-label'
                         id='tower-select'
@@ -140,7 +140,7 @@ function App() {
                     </Select>
                 </FormControl>
                 <FormControl fullWidth>
-                    <InputLabel id='level-select-label'>Выберите нужный этаж'</InputLabel>
+                    <InputLabel id='level-select-label'>Выберите нужный этаж *</InputLabel>
                     <Select
                         labelId='level-select-label'
                         id='level-select'
@@ -154,7 +154,7 @@ function App() {
                     </Select>
                 </FormControl>
                 <FormControl fullWidth>
-                    <InputLabel id='room-select-label'>Выберите комнату'</InputLabel>
+                    <InputLabel id='room-select-label'>Выберите комнату *</InputLabel>
                     <Select
                         labelId='room-select-label'
                         id='room-select'
@@ -167,35 +167,47 @@ function App() {
                     </Select>
                 </FormControl>
 
-                <Divider />
+                <Typography variant='subtitle1'>Забронировать дату и время</Typography>
 
-                    {/* выбор даты и интервала времени (в произвольном виде, например выпадающие списки, data-picker) */}
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
                             <DateTimePicker
                                 label='Время начала'
                                 ampm={false}
                                 disablePast={true}
                                 value={startTime}
                                 onChange={(newValue) => setStartTime(newValue)}
+                                sx={{ width: '100%' }}
+                                // openTo='year'
                                 slotProps={{
                                     textField: {
                                         required: true,
                                     },
+                                    // tabs: {
+                                    //     hidden: false,
+                                    // },
                                 }}
                             />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <DateTimePicker
                                 label='Время окончания'
                                 ampm={false}
                                 disablePast={true}
                                 value={endTime}
                                 onChange={(newValue) => setEndTime(newValue)}
+                                sx={{ width: '100%' }}
                                 slotProps={{
                                     textField: {
                                         required: true,
                                     },
                                 }}
                             />
-                    </LocalizationProvider>
+                        </Grid>
+                    </Grid>
+                </LocalizationProvider>
+                {/* <Divider /> */}
 
                 <TextField
                     label='Дополнительная информация'
@@ -212,12 +224,24 @@ function App() {
                     // inputRef={commentRef}
                     // InputLabelProps={{ shrink: commentRef.current.value }}
                 />
+
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
                     Отправить
                 </Button>
                 <Button variant='outlined' type='reset' onClick={handleReset}>
                     Очистить
                 </Button>
+
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <DateTimePicker sx={{ width: '100%' }} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <DateTimePicker sx={{ width: '100%' }} />
+                        </Grid>
+                    </Grid>
+                </LocalizationProvider> */}
             </Card>
         </div>
     )
