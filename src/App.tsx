@@ -17,8 +17,6 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import 'dayjs/locale/ru'
 import { Dayjs } from 'dayjs'
 
-// let forReRender = 0
-
 function App() {
     const [tower, setTower] = useState('')
     const [level, setLevel] = useState('')
@@ -28,7 +26,6 @@ function App() {
 
     const [comment, setComment] = useState(0)
     const commentRef = useRef<HTMLTextAreaElement | null>(null)
-    // const commentText = useRef('')
 
     const handleTowerChange = (event: SelectChangeEvent) => {
         setTower(event.target.value)
@@ -42,12 +39,6 @@ function App() {
         setRoom(event.target.value)
     }
 
-    // const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    //     // setComment(event.target.value)
-    //     console.log('🚀 commentText:', commentText.current)
-    //     commentText.current = event.target.value
-    // }
-
     function handleSubmit(e: React.MouseEvent) {
         // e.preventDefault()
         const obj = {
@@ -56,7 +47,6 @@ function App() {
             room,
             startTime,
             endTime,
-            // comment,
             comment: commentRef.current?.value,
         }
         console.log('🚀JSON:', JSON.stringify(obj))
@@ -73,7 +63,6 @@ function App() {
 
         commentRef.current!.value = ''
         setComment(new Date().getTime())
-        // forReRender = new Date().getTime()
     }
 
     const levelItems = []
@@ -126,6 +115,7 @@ function App() {
                 <Typography variant='h5' gutterBottom>
                     Выбор переговорной комнаты
                 </Typography>
+
                 <FormControl fullWidth>
                     <InputLabel id='tower-select-label'>Выберите башню *</InputLabel>
                     <Select
@@ -140,6 +130,7 @@ function App() {
                         <MenuItem value={'B'}>Башня Б</MenuItem>
                     </Select>
                 </FormControl>
+
                 <FormControl fullWidth>
                     <InputLabel id='level-select-label'>
                         Выберите нужный этаж *
@@ -156,6 +147,7 @@ function App() {
                         {levelItems}
                     </Select>
                 </FormControl>
+
                 <FormControl fullWidth>
                     <InputLabel id='room-select-label'>Выберите комнату *</InputLabel>
                     <Select
@@ -169,7 +161,9 @@ function App() {
                         {roomItems}
                     </Select>
                 </FormControl>
+
                 <Typography variant='subtitle1'>Забронировать дату и время</Typography>
+
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={6}>
@@ -211,6 +205,7 @@ function App() {
                 <Typography variant='body2' align='right' color='text.secondary'>
                     * отмеченные поля обязательны для заполнения
                 </Typography>
+
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
                     Отправить
                 </Button>
@@ -224,7 +219,7 @@ function App() {
 
 export default App
 
-// Оптимизация ввода через компонент
+// Оптимизация ввода через отдельный компонент
 
 interface MyTextFieldProps {
     commentRef: React.MutableRefObject<HTMLTextAreaElement | null>
