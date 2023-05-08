@@ -10,12 +10,14 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useRef, useState, useEffect } from 'react'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import 'dayjs/locale/ru'
 import { Dayjs } from 'dayjs'
+
+// let forReRender = 0
 
 function App() {
     const [tower, setTower] = useState('')
@@ -23,7 +25,10 @@ function App() {
     const [room, setRoom] = useState('')
     const [startTime, setStartTime] = useState<Dayjs | null>(null)
     const [endTime, setEndTime] = useState<Dayjs | null>(null)
-    const [comment, setComment] = useState('')
+
+    const [comment, setComment] = useState(0)
+    const commentRef = useRef<HTMLTextAreaElement | null>(null)
+    // const commentText = useRef('')
 
     const handleTowerChange = (event: SelectChangeEvent) => {
         setTower(event.target.value)
@@ -37,9 +42,11 @@ function App() {
         setRoom(event.target.value)
     }
 
-    const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setComment(event.target.value)
-    }
+    // const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    //     // setComment(event.target.value)
+    //     console.log('🚀 commentText:', commentText.current)
+    //     commentText.current = event.target.value
+    // }
 
     function handleSubmit(e: React.MouseEvent) {
         // e.preventDefault()
@@ -49,7 +56,8 @@ function App() {
             room,
             startTime,
             endTime,
-            comment,
+            // comment,
+            comment: commentRef.current?.value,
         }
         console.log('🚀JSON:', JSON.stringify(obj))
         document.querySelector('pre')!.textContent = JSON.stringify(obj, null, 2)
@@ -62,7 +70,10 @@ function App() {
         setRoom('')
         setStartTime(null)
         setEndTime(null)
-        setComment('')
+
+        commentRef.current!.value = ''
+        setComment(new Date().getTime())
+        // forReRender = new Date().getTime()
     }
 
     const levelItems = []
@@ -112,8 +123,9 @@ function App() {
                     e.preventDefault()
                 }}
             >
-                <Typography variant='h5' gutterBottom>Выбор переговорной комнаты</Typography>
-
+                <Typography variant='h5' gutterBottom>
+                    Выбор переговорной комнаты
+                </Typography>
                 <FormControl fullWidth>
                     <InputLabel id='tower-select-label'>Выберите башню *</InputLabel>
                     <Select
@@ -128,7 +140,6 @@ function App() {
                         <MenuItem value={'B'}>Башня Б</MenuItem>
                     </Select>
                 </FormControl>
-
                 <FormControl fullWidth>
                     <InputLabel id='level-select-label'>
                         Выберите нужный этаж *
@@ -145,7 +156,6 @@ function App() {
                         {levelItems}
                     </Select>
                 </FormControl>
-
                 <FormControl fullWidth>
                     <InputLabel id='room-select-label'>Выберите комнату *</InputLabel>
                     <Select
@@ -159,9 +169,7 @@ function App() {
                         {roomItems}
                     </Select>
                 </FormControl>
-
                 <Typography variant='subtitle1'>Забронировать дату и время</Typography>
-
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='ru'>
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={6}>
@@ -198,19 +206,11 @@ function App() {
                     </Grid>
                 </LocalizationProvider>
 
-                <TextField
-                    label='Дополнительная информация'
-                    variant='outlined'
-                    multiline
-                    minRows={2}
-                    maxRows={4}
-                    fullWidth
-                    value={comment}
-                    onChange={handleCommentChange}
-                />
+                <MyTextField commentRef={commentRef} forReRender={comment} />
 
-                <Typography variant='body2' align='right' color='text.secondary'>* отмеченные поля обязательны для заполнения</Typography>
-
+                <Typography variant='body2' align='right' color='text.secondary'>
+                    * отмеченные поля обязательны для заполнения
+                </Typography>
                 <Button variant='contained' type='submit' onClick={handleSubmit}>
                     Отправить
                 </Button>
@@ -223,3 +223,38 @@ function App() {
 }
 
 export default App
+
+// Оптимизация ввода через компонент
+
+interface MyTextFieldProps {
+    commentRef: React.MutableRefObject<HTMLTextAreaElement | null>
+    forReRender: number
+}
+
+function MyTextField(props: MyTextFieldProps) {
+    const [comment, setComment] = useState('')
+
+    const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setComment(event.target.value)
+    }
+
+    // Нужно, чтобы MUI передвинул подсказку после сброса - shrink
+    useEffect(() => {
+        setComment('')
+    }, [props.forReRender])
+
+    return (
+        <TextField
+            label='Дополнительная информация'
+            variant='outlined'
+            multiline
+            minRows={2}
+            maxRows={4}
+            fullWidth
+            value={comment}
+            onChange={handleCommentChange}
+            inputRef={props.commentRef}
+            // InputLabelProps={{ shrink ?? }}
+        />
+    )
+}
